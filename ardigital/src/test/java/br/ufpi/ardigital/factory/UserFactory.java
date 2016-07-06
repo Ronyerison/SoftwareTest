@@ -9,7 +9,7 @@ public class UserFactory {
 	}
 
 	public static User criaUsuarioInvalido() {
-		return null;
+		return new User("invalido", "invalido");
 	}
 
 }

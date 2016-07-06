@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.model.User;
@@ -22,7 +22,8 @@ public class ArDigitalSendDocumentTest {
 
 	@Before
 	public void setUp() throws Exception {
-		driver = new FirefoxDriver();
+		System.setProperty("chromedriver.exe", "..//resources//chromedriver.exe");
+		driver = new ChromeDriver();
 		baseUrl = "http://10.28.14.224:8181/";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -44,7 +45,9 @@ public class ArDigitalSendDocumentTest {
 		driver.findElement(By.id("form:conteudo")).clear();
 		driver.findElement(By.id("form:conteudo")).sendKeys("Cobrança teste");
 		driver.findElement(By.id("form:j_idt49_next")).click();
+		waitForLoadPage();
 		driver.findElement(By.id("form:j_idt49_next")).click();
+		waitForLoadPage();
 		assertEquals("É necessário informar um Interessado", driver
 				.findElement(By.cssSelector("span.ui-messages-error-summary"))
 				.getText());
@@ -59,5 +62,8 @@ public class ArDigitalSendDocumentTest {
 		}
 	}
 
+	private void waitForLoadPage() throws InterruptedException{
+		Thread.sleep(2000);
+	}
 	
 }

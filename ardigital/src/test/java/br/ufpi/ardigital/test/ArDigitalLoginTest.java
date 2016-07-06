@@ -10,8 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.model.User;
@@ -23,9 +22,8 @@ public class ArDigitalLoginTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		capabilities.setCapability("marionette", true);
-		driver = new FirefoxDriver(capabilities);
+		System.setProperty("chromedriver.exe", "..//resources//chromedriver.exe");
+		driver = new ChromeDriver();
 		baseUrl = "http://10.28.14.224:8181/";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
