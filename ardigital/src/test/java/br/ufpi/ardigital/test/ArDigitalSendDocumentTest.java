@@ -16,25 +16,24 @@ import br.ufpi.ardigital.factory.FileArFactory;
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.model.FileAr;
 import br.ufpi.ardigital.model.User;
+import br.ufpi.ardigital.util.Constant;
 
 public class ArDigitalSendDocumentTest {
 	private WebDriver driver;
-	private String baseUrl;
 	private StringBuffer verificationErrors = new StringBuffer();
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("chromedriver.exe",
-				"..//resources//chromedriver.exe");
+		System.setProperty(Constant.ChromeDriverLib,
+				Constant.ChromeDriverPath);
 		driver = new ChromeDriver();
-		baseUrl = "http://10.28.14.224:8181/";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void sendDocumentInvalidTest() throws Exception {
 		User validUser = UserFactory.criaUsuarioValido();
-		driver.get(baseUrl + "/ar-digital/login.xhtml");
+		driver.get(Constant.BaseURL + Constant.LoginURL);
 		driver.findElement(By.id("j_idt11:email")).clear();
 		driver.findElement(By.id("j_idt11:email")).sendKeys(
 				validUser.getLogin());
@@ -61,7 +60,7 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentValidTest() throws Exception {
 		User validUser = UserFactory.criaUsuarioValido();
-		driver.get(baseUrl + "/ar-digital/login.xhtml");
+		driver.get(Constant.BaseURL + Constant.LoginURL);
 		driver.findElement(By.id("j_idt11:email")).clear();
 		driver.findElement(By.id("j_idt11:email")).sendKeys(
 				validUser.getLogin());

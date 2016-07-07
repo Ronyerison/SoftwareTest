@@ -1,11 +1,12 @@
 package br.ufpi.ardigital.factory;
 
 import br.ufpi.ardigital.model.User;
+import br.ufpi.ardigital.util.Constant;
 
 public class UserFactory {
 
 	public static User criaUsuarioValido() {
-		return new User("ar_user1", "armestrado2016");
+		return new User(Constant.UserName, Constant.UserPassword);
 	}
 
 	public static User criaUsuarioInvalido() {
