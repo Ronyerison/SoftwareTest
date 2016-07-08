@@ -38,7 +38,7 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentValidTest() throws Exception {
 		User validUser = UserFactory.criaUsuarioValido();
-		driver.get(baseUrl + "/ar-digital/login.xhtml");
+		driver.get(Constant.BaseURL + Constant.LoginURL);
 		driver.findElement(By.id("j_idt11:email")).clear();
 		driver.findElement(By.id("j_idt11:email")).sendKeys(
 				validUser.getLogin());
