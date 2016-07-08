@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ArDigitalLoginTest.class,
-	ArDigitalSendDocumentTest.class
+	ArDigitalSendDocumentTest.class,
+	ArDigitalMonitorSendingTest.class
 })
 public class ArDigitalTestSuit {
 
