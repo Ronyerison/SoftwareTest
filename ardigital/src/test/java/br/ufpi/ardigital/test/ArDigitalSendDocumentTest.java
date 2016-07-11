@@ -14,8 +14,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import br.ufpi.ardigital.factory.FileArFactory;
-import br.ufpi.ardigital.model.FileAr;
+import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Constant;
 import br.ufpi.ardigital.util.Default;
 
@@ -38,30 +37,8 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentValidTest() throws Exception {
-		Default.login(driver);
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		driver.findElement(By.id("form:tipo_label")).click();
-		driver.findElement(By.id("form:tipo_1")).click();
-		driver.findElement(By.id("form:conteudo")).clear();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Teste documento válido");
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("SAULO DE TÁRSIO");
-		waitForLoadPage();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		waitForLoadPage();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		FileAr file = FileArFactory.createValidFile();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(file.getPath());
-		waitForLoadPage();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
-		driver.findElement(By.id("form:ajax")).click();
-		assertEquals("Documento encaminhado com sucesso!",
-				driver.findElement(By.cssSelector("div.ui-grid-col-12")).getText());
+		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.sendDocument(driver);
 	}
 
 	/**
@@ -71,16 +48,22 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidTest() throws Exception {
-		Default.login(driver);
+		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys("Cobrança teste");
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		assertEquals("É necessário informar um Interessado",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -93,18 +76,24 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidReceiverRegisterTest() throws Exception {
-		Default.login(driver);
+		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='form:tipo']/div[3]")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys("Teste cadastro usuario invalido.");
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		assertEquals("É necessário inserir o bairro do endereço",
 				driver.findElement(By.xpath("//div[@id='form:camposInteressadoMessage']/div/ul/li[5]/span")).getText());
 	}
@@ -117,39 +106,60 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidPagesLimitTest() throws Exception {
-		Default.login(driver);
+		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys("Documento com páginas acima do limite.");
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("SAULO DE TÁRSIO");
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		assertTrue(isElementPresent(By.cssSelector("span.ui-messages-error-summary")));
 	}
 
@@ -161,38 +171,60 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentValidPagesLimitTest() throws Exception {
-		Default.login(driver);
+		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys("Documento com páginas acima do limite.");
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("SAULO DE TÁRSIO");
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
-		waitForLoadPage();
+		Default.waitInterval();
 		driver.findElement(By.id("form:ajax")).click();
+		Default.waitInterval();
 		assertEquals("Documento encaminhado com sucesso!",
 				driver.findElement(By.cssSelector("div.ui-grid-col-12")).getText());
 	}
@@ -205,7 +237,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedValidTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_NONE);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NONE);
 		assertEquals("Upload de Arquivos",
 				driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
 	}
@@ -218,7 +250,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutNameTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_NOME);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NOME);
 		assertEquals("É necessário inserir um nome",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -231,7 +263,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutTitleTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_TITULO);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_TITULO);
 		assertEquals("É necessário inserir um titulo",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -244,7 +276,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutStreetTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_LOGRADOURO);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_LOGRADOURO);
 		assertEquals("É necessário inserir o logradouro do endereço",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -257,7 +289,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutAddressNumberTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_NUMERO);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NUMERO);
 		assertEquals("É necessário inserir o número do endereço",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -270,7 +302,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutDistrictTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_BAIRRO);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_BAIRRO);
 		assertEquals("É necessário inserir o bairro do endereço",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -283,7 +315,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutPostalCodeTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_CEP);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_CEP);
 		assertEquals("É necessário inserir o número do CEP",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -296,7 +328,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutCityTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_MUNICIPIO);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_MUNICIPIO);
 		assertEquals("É necessário inserir o Município do endereço",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -309,7 +341,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void registerNewInterestedWithoutFederativeUnitTest() throws Exception {
-		Default.registerNewInterested(driver, Constant.IGNORE_FIELD_UF);
+		Default.registerNewInterested(driver, Default.IGNORE_FIELD_UF);
 		assertEquals("É necessário inserir a Unidade Federativa",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
@@ -330,10 +362,6 @@ public class ArDigitalSendDocumentTest {
 		} catch (NoSuchElementException e) {
 			return false;
 		}
-	}
-
-	private void waitForLoadPage() throws InterruptedException {
-		Thread.sleep(1000);
 	}
 
 }
