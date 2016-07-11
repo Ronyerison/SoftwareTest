@@ -12,7 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import br.ufpi.ardigital.util.Constant;
+import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
 
 public class ArDigitalDownloadDocument {
@@ -21,14 +21,14 @@ public class ArDigitalDownloadDocument {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty(Constant.ChromeDriverLib, Constant.ChromeDriverPath);
+		System.setProperty(Config.CHROME_DRIVER_LIB, Config.CHROME_DRIVER_PATH);
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void downloadDocumentInvalidTest() throws Exception {
-		driver.get(Constant.BaseURL + "/downloadDocumento/downloadDocumento.xhtml");
+		driver.get(Config.BASE_URL + Config.DOWNLOAD_URL);
 		Default.waitInterval();
 		driver.findElement(By.id("formPrincipal:j_idt28")).click();
 		Default.waitInterval();
@@ -39,7 +39,7 @@ public class ArDigitalDownloadDocument {
 	
 	@Test
 	public void downloadDocumentInvalidKeyTest() throws Exception {
-		driver.get(Constant.BaseURL + "/downloadDocumento/downloadDocumento.xhtml");
+		driver.get(Config.BASE_URL + Config.DOWNLOAD_URL);
 		Default.waitInterval();
 		driver.findElement(By.id("formPrincipal:j_idt26")).sendKeys("Chave Inválida");
 		Default.waitInterval();

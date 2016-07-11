@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
-import br.ufpi.ardigital.util.Constant;
+import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
 
 public class ArDigitalApproveDocumentTest {
@@ -22,7 +22,7 @@ public class ArDigitalApproveDocumentTest {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty(Constant.ChromeDriverLib, Constant.ChromeDriverPath);
+		System.setProperty(Config.CHROME_DRIVER_LIB, Config.CHROME_DRIVER_PATH);
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -35,10 +35,10 @@ public class ArDigitalApproveDocumentTest {
 	 */
 	@Test
 	public void acceptDocumentValidTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.sendDocument(driver);
 		Default.logout(driver);
-		Default.login(driver, UserFactory.criaUsuarioAdminValido());
+		Default.login(driver, UserFactory.createAdministratorUser());
 		acceptDocument();
 	}
 	
@@ -50,10 +50,10 @@ public class ArDigitalApproveDocumentTest {
 	 */
 	@Test
 	public void rejectDocumentValidTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.sendDocument(driver);
 		Default.logout(driver);
-		Default.login(driver, UserFactory.criaUsuarioAdminValido());
+		Default.login(driver, UserFactory.createAdministratorUser());
 		rejectDocument();
 	}
 	

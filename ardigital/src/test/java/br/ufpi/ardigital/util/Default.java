@@ -30,7 +30,7 @@ public class Default {
 	}
 	
 	public static final void login(WebDriver driver, User validUser) throws InterruptedException {
-		driver.get(Constant.BaseURL + Constant.LoginURL);
+		driver.get(Config.BASE_URL + Config.LOGIN_URL);
 		driver.findElement(By.id("j_idt11:email")).clear();
 		driver.findElement(By.id("j_idt11:email")).sendKeys(
 				validUser.getLogin());
@@ -56,14 +56,20 @@ public class Default {
 		driver.findElement(
 				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span"))
 				.click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys(
 				"Teste documento válido");
+		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(
 				"SAULO DE TÁRSIO");
 		Default.waitInterval();
@@ -74,13 +80,16 @@ public class Default {
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
 		FileAr file = FileArFactory.createValidFile();
+		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).sendKeys(
 				file.getPath());
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:ajax")).click();
+		Default.waitInterval();
 		assertEquals("Documento encaminhado com sucesso!",
 				driver.findElement(By.cssSelector("div.ui-grid-col-12"))
 						.getText());
@@ -88,7 +97,7 @@ public class Default {
 
 	
 	public static final void registerNewInterested(WebDriver driver, int ignoreField) throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 	    Default.waitInterval();
 	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 	    Default.waitInterval();

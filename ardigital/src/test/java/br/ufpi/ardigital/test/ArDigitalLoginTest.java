@@ -14,7 +14,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.model.User;
-import br.ufpi.ardigital.util.Constant;
+import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
 
 public class ArDigitalLoginTest {
@@ -23,14 +23,14 @@ public class ArDigitalLoginTest {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty(Constant.ChromeDriverLib, Constant.ChromeDriverPath);
+		System.setProperty(Config.CHROME_DRIVER_LIB, Config.CHROME_DRIVER_PATH);
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void validLogintest() throws Exception {
-		User usuarioValido = UserFactory.criaUsuarioValido();
+		User usuarioValido = UserFactory.createCommonUser();
 		Default.login(driver, usuarioValido);
 		assertEquals(usuarioValido.getLogin(),
 				driver.findElement(By.id("formNotificacaoes:j_idt41_button"))
@@ -39,7 +39,7 @@ public class ArDigitalLoginTest {
 
 	@Test
 	public void loginInvalidTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioInvalido());
+		Default.login(driver, UserFactory.createInvalidUser());
 		assertEquals(
 				"Usuário ou senha incorretos",
 				driver.findElement(

@@ -15,8 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
-import br.ufpi.ardigital.model.User;
-import br.ufpi.ardigital.util.Constant;
+import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
 
 public class ArDigitalSendDocumentTest {
@@ -25,7 +24,7 @@ public class ArDigitalSendDocumentTest {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty(Constant.ChromeDriverLib, Constant.ChromeDriverPath);
+		System.setProperty(Config.CHROME_DRIVER_LIB, Config.CHROME_DRIVER_PATH);
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -38,7 +37,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentValidTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.sendDocument(driver);
 	}
 
@@ -49,7 +48,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 		Default.waitInterval();
@@ -77,7 +76,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidReceiverRegisterTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 		Default.waitInterval();
@@ -107,7 +106,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentInvalidPagesLimitTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 		Default.waitInterval();
@@ -131,31 +130,31 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:checkboxEnviarAnexos")).click();
 		Default.waitInterval();
@@ -172,7 +171,7 @@ public class ArDigitalSendDocumentTest {
 	 */
 	@Test
 	public void sendDocumentValidPagesLimitTest() throws Exception {
-		Default.login(driver, UserFactory.criaUsuarioValido());
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 		Default.waitInterval();
@@ -196,31 +195,31 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt117_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Constant.FilePath);
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
@@ -348,31 +347,91 @@ public class ArDigitalSendDocumentTest {
 	}
 	
 	@Test
-	  public void sendDocumentWithExistingUserTest() throws Exception {
-		Default.login(driver, new User("ar_user3", "armestrado2016"));
+	public void sendDocumentWithExistingUserTest() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).sendKeys("777.777.777-79");
+		Default.waitInterval();
+		driver.findElement(By.id("form:nomeGestor")).click();
+		Default.waitInterval();
+		assertEquals("CPF de número 77777777779 já existe.",
+				driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
+	}
+	
+	/**
+	 * Teste para envio de um documento inserindo um novo cadastro de
+	 * interessado com um CPF ja cadastrado
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	  public void registerNewInterestedWithExistingCPFTest() throws Exception {
+	    Default.login(driver, UserFactory.createCommonUser());
+	    Default.waitInterval();
 	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
 	    Default.waitInterval();
 	    driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
+	    Default.waitInterval();
 	    driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
+	    Default.waitInterval();
 	    driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-	    driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
-		Default.waitInterval();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).sendKeys("Teste.");
+	    Default.waitInterval();
 	    driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
+	    Default.waitInterval();
 	    driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-		Default.waitInterval();
+	    Default.waitInterval();
 	    driver.findElement(By.id("form:cpf")).clear();
-		Default.waitInterval();
-	    driver.findElement(By.id("form:cpf")).sendKeys("777.777.777-79");
-		Default.waitInterval();
-	    driver.findElement(By.id("form:nomeGestor")).click();
-		Default.waitInterval();
-	    assertEquals("CPF de número 77777777779 já existe.", driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
-	  }
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:cpf")).sendKeys("111.111.111-11");
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:unidadeGestora")).click();
+	    Default.waitInterval();
+	    assertEquals("CPF de número 11111111111 já existe.", driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
+	    Default.waitInterval();
+//	    assertEquals("111.111.111-11", driver.findElement(By.id("form:cpf")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("UNIDADE TESTE", driver.findElement(By.id("form:unidadeGestora")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("JOSÉ DA SILVA", driver.findElement(By.id("form:nomeGestor")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("PREFEITO", driver.findElement(By.id("form:titulo")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("RUA JOÃO MARTINIANO", driver.findElement(By.id("form:logradouro")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("1290", driver.findElement(By.id("form:numero")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("CEMITÉRIO SÃO VICENTE DE PAULA", driver.findElement(By.id("form:complemento")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("COLIBRI", driver.findElement(By.id("form:bairro")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("64.240-000", driver.findElement(By.id("form:cep")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("PIRACURUCA", driver.findElement(By.id("form:municipio")).getText());
+//	    Default.waitInterval();
+//	    assertEquals("PI", driver.findElement(By.id("form:uf")).getText());
+//	    Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+	    Default.waitInterval();
+	    assertEquals("Upload de Arquivos", driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
+	}
 
 	@After
 	public void tearDown() throws Exception {
