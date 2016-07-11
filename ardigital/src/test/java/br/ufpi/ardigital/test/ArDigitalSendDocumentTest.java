@@ -15,6 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
+import br.ufpi.ardigital.model.User;
 import br.ufpi.ardigital.util.Constant;
 import br.ufpi.ardigital.util.Default;
 
@@ -345,6 +346,99 @@ public class ArDigitalSendDocumentTest {
 		assertEquals("É necessário inserir a Unidade Federativa",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
+	
+	@Test
+	  public void testEnvioDocumentoCadastrarUsuarioExistente() throws Exception {
+		Default.login(driver, new User("ar_user3", "armestrado2016"));
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+	    driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cpf")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cpf")).sendKeys("777.777.777-79");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:unidadeGestora")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:unidadeGestora")).sendKeys("uh");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:nomeGestor")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:nomeGestor")).sendKeys("Interessado9");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:titulo")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:titulo")).sendKeys("Prefeito");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:logradouro")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:logradouro")).sendKeys("l9");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:numero")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:numero")).sendKeys("99999");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:bairro")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:bairro")).sendKeys("bairro9");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cep")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cep")).sendKeys("99.999-99");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:uf")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:uf")).sendKeys("PI");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:municipio")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:municipio")).sendKeys("Teresina");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:upOficio_input")).sendKeys(Constant.FilePath);
+		Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:ajax")).click();
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+	    driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cpf")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:cpf")).sendKeys("777.777.777-79");
+		Default.waitInterval();
+	    driver.findElement(By.id("form:unidadeGestora")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("form:nomeGestor")).click();
+		Default.waitInterval();
+	    assertEquals("CPF de número 77777777779 já existe.", driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
+	  }
 
 	@After
 	public void tearDown() throws Exception {
