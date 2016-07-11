@@ -345,7 +345,7 @@ public class ArDigitalSendDocumentTest {
 		assertEquals("É necessário inserir a Unidade Federativa",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
-	
+
 	@Test
 	public void sendDocumentWithExistingUserTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
@@ -373,7 +373,7 @@ public class ArDigitalSendDocumentTest {
 		assertEquals("CPF de número 77777777779 já existe.",
 				driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
 	}
-	
+
 	/**
 	 * Teste para envio de um documento inserindo um novo cadastro de
 	 * interessado com um CPF ja cadastrado
@@ -381,56 +381,134 @@ public class ArDigitalSendDocumentTest {
 	 * @throws Exception
 	 */
 	@Test
-	  public void registerNewInterestedWithExistingCPFTest() throws Exception {
-	    Default.login(driver, UserFactory.createCommonUser());
-	    Default.waitInterval();
-	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:tipo_label")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:tipo_1")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:conteudo")).clear();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:conteudo")).sendKeys("Teste.");
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:j_idt49_next")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:cpf")).clear();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:cpf")).sendKeys("111.111.111-11");
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:unidadeGestora")).click();
-	    Default.waitInterval();
-	    assertEquals("CPF de número 11111111111 já existe.", driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
-	    Default.waitInterval();
-//	    assertEquals("111.111.111-11", driver.findElement(By.id("form:cpf")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("UNIDADE TESTE", driver.findElement(By.id("form:unidadeGestora")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("JOSÉ DA SILVA", driver.findElement(By.id("form:nomeGestor")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("PREFEITO", driver.findElement(By.id("form:titulo")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("RUA JOÃO MARTINIANO", driver.findElement(By.id("form:logradouro")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("1290", driver.findElement(By.id("form:numero")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("CEMITÉRIO SÃO VICENTE DE PAULA", driver.findElement(By.id("form:complemento")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("COLIBRI", driver.findElement(By.id("form:bairro")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("64.240-000", driver.findElement(By.id("form:cep")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("PIRACURUCA", driver.findElement(By.id("form:municipio")).getText());
-//	    Default.waitInterval();
-//	    assertEquals("PI", driver.findElement(By.id("form:uf")).getText());
-//	    Default.waitInterval();
-	    driver.findElement(By.id("form:j_idt49_next")).click();
-	    Default.waitInterval();
-	    assertEquals("Upload de Arquivos", driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
+	public void registerNewInterestedWithExistingCPFTest() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys("Teste.");
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).sendKeys("111.111.111-11");
+		Default.waitInterval();
+		driver.findElement(By.id("form:unidadeGestora")).click();
+		Default.waitInterval();
+		assertEquals("CPF de número 11111111111 já existe.",
+				driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		assertEquals("Upload de Arquivos",
+				driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
+	}
+	
+	
+	//TODO desatrelar o teste do interessado 111.111.111-11, colocando os dados do usuario de teste em Config
+	/**
+	 * Teste para envio de um documento inserindo um novo cadastro de
+	 * interessado com um CPF ja cadastrado e moficando alguns campos
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void registerNewInterestedWithExistingCPFModifyingData() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys("Teste de modficacao de interessado.");
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:cpf")).sendKeys("111.111.111-11");
+		Default.waitInterval();
+		driver.findElement(By.id("form:unidadeGestora")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:unidadeGestora")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:unidadeGestora")).sendKeys("UNIDADE TESTE MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:nomeGestor")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:nomeGestor")).sendKeys("JOSÉ DA SILVA MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:titulo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:titulo")).sendKeys("PREFEITO MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:logradouro")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:logradouro")).sendKeys("RUA JOÃO MARTINIANO MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:complemento")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:complemento")).sendKeys("CEMITÉRIO SÃO VICENTE DE PAULA MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:bairro")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:bairro")).sendKeys("COLIBRI MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:municipio")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:municipio")).sendKeys("PIRACURUCA MODIFICADO");
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		assertEquals("JOSÉ DA SILVA MODIFICADO",
+				driver.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr/td[2]")).getText());
+		assertEquals("PREFEITO MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[2]/td[2]")).getText());
+		assertEquals("111.111.111-11", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[3]/td[2]")).getText());
+		assertEquals("UNIDADE TESTE MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[4]/td[2]")).getText());
+		assertEquals("RUA JOÃO MARTINIANO MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[5]/td[2]")).getText());
+		assertEquals("1290", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[6]/td[2]")).getText());
+		assertEquals("COLIBRI MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[7]/td[2]")).getText());
+		assertEquals("CEMITÉRIO SÃO VICENTE DE PAULA MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[8]/td[2]")).getText());
+		assertEquals("COLIBRI MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[9]/td[2]")).getText());
+		assertEquals("64.240-000", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[10]/td[2]")).getText());
+		assertEquals("PIRACURUCA MODIFICADO", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[11]/td[2]")).getText());
+		assertEquals("PI", driver
+				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[12]/td[2]")).getText());
 	}
 
 	@After
