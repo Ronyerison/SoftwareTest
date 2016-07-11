@@ -12,9 +12,17 @@ public class UserFactory {
 	public static User criaUsuarioAdminValido() {
 		return new User("ar_user6", "armestrado2016");
 	}
+	
+	public static User createIvalidLoginUser() {
+		return new User("invalid", "armestrado2016");
+	}
 
+	public static User createIvalidPasswordUser() {
+		return new User("ar_user1", "invalid");
+	}
+	
 	public static User criaUsuarioInvalido() {
-		return new User("invalido", "invalido");
+		return new User("invalid", "invalid");
 	}
 
 }

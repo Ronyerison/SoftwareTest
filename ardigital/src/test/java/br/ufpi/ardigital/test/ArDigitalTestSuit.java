@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
 	ArDigitalLoginTest.class,
 	ArDigitalSendDocumentTest.class,
 	ArDigitalMonitorSendingTest.class,
-	ArDigitalApproveDocumentTest.class
+	ArDigitalApproveDocumentTest.class,
+	ArDigitalDownloadDocument.class
 })
 public class ArDigitalTestSuit {
 

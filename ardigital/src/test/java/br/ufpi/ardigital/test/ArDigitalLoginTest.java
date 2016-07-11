@@ -38,8 +38,28 @@ public class ArDigitalLoginTest {
 	}
 
 	@Test
-	public void testArDigitalLoginInvalid() throws Exception {
+	public void loginInvalidTest() throws Exception {
 		Default.login(driver, UserFactory.criaUsuarioInvalido());
+		assertEquals(
+				"Usuário ou senha incorretos",
+				driver.findElement(
+						By.cssSelector("span.ui-messages-error-summary"))
+						.getText());
+	}
+	
+	@Test
+	public void loginUserInvalidTest() throws Exception {
+		Default.login(driver, UserFactory.createIvalidLoginUser());
+		assertEquals(
+				"Usuário ou senha incorretos",
+				driver.findElement(
+						By.cssSelector("span.ui-messages-error-summary"))
+						.getText());
+	}
+	
+	@Test
+	public void passwordUserInvalidTest() throws Exception {
+		Default.login(driver, UserFactory.createIvalidPasswordUser());
 		assertEquals(
 				"Usuário ou senha incorretos",
 				driver.findElement(
