@@ -28,7 +28,8 @@ public class ArDigitalManagePermissionsTest {
 	}
 
 	/**
-	 * Teste que realiza a consulta dos operadores filtrando pelo nome
+	 * Teste que realiza a consulta dos operadores filtrando pelo nome do
+	 * operador
 	 * 
 	 * @throws Exception
 	 */
@@ -59,8 +60,9 @@ public class ArDigitalManagePermissionsTest {
 	}
 
 	/**
-	 * Teste que altera a permissão do usuario para envio de documento sem
-	 * necessitar de aprovação
+	 * Teste que altera a permissão de um usuario comum para não necessitar de
+	 * aprovação de envio de documentos e verifica se um novo documento enviado
+	 * está com status Envio Aprovado.
 	 * 
 	 * @throws Exception
 	 */
@@ -94,9 +96,13 @@ public class ArDigitalManagePermissionsTest {
 	}
 
 	/**
+	 * Método que altera a permissão de envio de um documento de um usuário
+	 * 
+	 * @param activePermission
 	 * @throws InterruptedException
 	 */
-	private void changePermissionUser(boolean activePermission) throws InterruptedException {
+	private void changePermissionUser(boolean activePermission)
+			throws InterruptedException {
 		driver.findElement(
 				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
 				.click();
@@ -113,30 +119,60 @@ public class ArDigitalManagePermissionsTest {
 		Default.waitInterval();
 		driver.findElement(By.id("j_idt46:j_idt112")).click();
 		Default.waitInterval();
-		driver.findElement(
-				By.cssSelector("span.ui-icon.ui-icon-pencil"))
+		driver.findElement(By.cssSelector("span.ui-icon.ui-icon-pencil"))
 				.click();
 		Default.waitInterval();
 		driver.findElement(
 				By.xpath("//div[@id='j_idt46:tabelaOperadores:0:j_idt144']/div[3]/span"))
 				.click();
 		Default.waitInterval();
-		if(activePermission){
+		if (activePermission) {
 			driver.findElement(By.id("j_idt46:tabelaOperadores:0:j_idt144_2"))
-			.click();
-		}else{
+					.click();
+		} else {
 			driver.findElement(By.id("j_idt46:tabelaOperadores:0:j_idt144_1"))
-			.click();
+					.click();
 		}
 		Default.waitInterval();
 		driver.findElement(By.cssSelector("span.ui-icon.ui-icon-check"))
-		.click();
+				.click();
 		Default.waitInterval();
 		driver.findElement(By.id("formNotificacaoes:j_idt42_button")).click();
 		Default.waitInterval();
 		driver.findElement(
 				By.xpath("//div[@id='formNotificacaoes:j_idt42_menu']/ul/li/a/span[2]"))
 				.click();
+	}
+
+	/**
+	 * Teste que realiza busca por nome nos setores
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void findSectorByNameTest() throws Exception {
+		Default.login(driver, UserFactory.createAdministratorUser());
+		Default.waitInterval();
+		driver.findElement(
+				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:autocompleteSetores_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:autocompleteSetores_input"))
+				.sendKeys("DIRETORIA");
+		Default.waitInterval();
+		driver.findElement(
+				By.xpath("//div[@id='j_idt46:autocompleteSetores_panel']/ul/li"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:j_idt58")).click();
+		Default.waitInterval();
+		assertEquals(
+				"DIRETORIA PROCESSUAL",
+				driver.findElement(
+						By.cssSelector("tr.ui-widget-content.ui-datatable-even > td"))
+						.getText());
 	}
 
 	@After
