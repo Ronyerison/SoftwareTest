@@ -16,7 +16,7 @@ import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
 
-public class ArDigitalManagePermissions {
+public class ArDigitalManagePermissionsTest {
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
 

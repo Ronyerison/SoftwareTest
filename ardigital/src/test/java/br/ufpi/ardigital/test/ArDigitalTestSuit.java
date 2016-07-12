@@ -9,8 +9,9 @@ import org.junit.runners.Suite;
 	ArDigitalSendDocumentTest.class,
 	ArDigitalMonitorSendingTest.class,
 	ArDigitalApproveDocumentTest.class,
-	ArDigitalDownloadDocument.class,
-	ArDigitalManagePermissions.class
+	ArDigitalDownloadDocumentTest.class,
+	ArDigitalManagePermissionsTest.class,
+	ArDigitalManageDocumentsTest.class
 })
 public class ArDigitalTestSuit {
 
