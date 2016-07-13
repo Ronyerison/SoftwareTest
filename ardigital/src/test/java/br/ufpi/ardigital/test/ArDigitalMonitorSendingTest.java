@@ -15,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
+import br.ufpi.ardigital.util.Field;
 
 public class ArDigitalMonitorSendingTest {
 	private WebDriver driver;
@@ -45,6 +46,18 @@ public class ArDigitalMonitorSendingTest {
 		assertEquals("Cobrança",
 				driver.findElement(By.xpath("//tbody[@id='formTabelaDocumentos:tabelaAcompanhamento_data']/tr/td[2]"))
 						.getText());
+	}
+	
+	@Test
+	public void monitorSendingAdvancedSearchDeclarationField() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.sendDocument(driver);
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+		driver.findElement(By.id("formPesquisar:declaracaoDeConteudo")).clear();
+		driver.findElement(By.id("formPesquisar:declaracaoDeConteudo")).sendKeys(Field.DECLARATION_TEXT_SEND_DOC.substring(0, 15));
+		driver.findElement(By.id("formPesquisar:ajax")).click();
+		assertEquals("SAULO DE TÁRSIO SILVA SOUSA", driver.findElement(By.cssSelector("td")).getText());
 	}
 
 	@After

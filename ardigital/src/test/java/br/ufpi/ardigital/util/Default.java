@@ -64,7 +64,7 @@ public class Default {
 		driver.findElement(By.id("form:conteudo")).clear();
 		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys(
-				"Teste documento válido");
+				Field.DECLARATION_TEXT_SEND_DOC);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();

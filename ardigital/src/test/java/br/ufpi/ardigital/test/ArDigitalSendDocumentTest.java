@@ -17,6 +17,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
+import br.ufpi.ardigital.util.Field;
 
 public class ArDigitalSendDocumentTest {
 	private WebDriver driver;
@@ -346,34 +347,6 @@ public class ArDigitalSendDocumentTest {
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
 	}
 
-	@Test
-	public void sendDocumentWithExistingUserTest() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).sendKeys("777.777.777-79");
-		Default.waitInterval();
-		driver.findElement(By.id("form:nomeGestor")).click();
-		Default.waitInterval();
-		assertEquals("CPF de número 77777777779 já existe.",
-				driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
-	}
-
 	/**
 	 * Teste para envio de um documento inserindo um novo cadastro de
 	 * interessado com um CPF ja cadastrado
@@ -439,37 +412,37 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:cpf")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).sendKeys(INTERESTED_CPF);
+		driver.findElement(By.id("form:cpf")).sendKeys(Field.INTERESTED_CPF);
 		Default.waitInterval();
 		driver.findElement(By.id("form:unidadeGestora")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:unidadeGestora")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:unidadeGestora")).sendKeys(INTERESTED_MODIFIED_MANAGER_UNITY);
+		driver.findElement(By.id("form:unidadeGestora")).sendKeys(Field.INTERESTED_MODIFIED_MANAGER_UNITY);
 		Default.waitInterval();
 		driver.findElement(By.id("form:nomeGestor")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:nomeGestor")).sendKeys(INTERESTED_MODIFIED_NAME);
+		driver.findElement(By.id("form:nomeGestor")).sendKeys(Field.INTERESTED_MODIFIED_NAME);
 		Default.waitInterval();
 		driver.findElement(By.id("form:titulo")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:titulo")).sendKeys(INTERESTED_MODIFIED_TITLE);
+		driver.findElement(By.id("form:titulo")).sendKeys(Field.INTERESTED_MODIFIED_TITLE);
 		Default.waitInterval();
 		driver.findElement(By.id("form:logradouro")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).sendKeys(INTERESTED_MODIFIED_STREET);
+		driver.findElement(By.id("form:logradouro")).sendKeys(Field.INTERESTED_MODIFIED_STREET);
 		Default.waitInterval();
 		driver.findElement(By.id("form:complemento")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:complemento")).sendKeys(INTERESTED_MODIFIED_COMPLEMENT);
+		driver.findElement(By.id("form:complemento")).sendKeys(Field.INTERESTED_MODIFIED_COMPLEMENT);
 		Default.waitInterval();
 		driver.findElement(By.id("form:bairro")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).sendKeys(INTERESTED_MODIFIED_DISTRICT);
+		driver.findElement(By.id("form:bairro")).sendKeys(Field.INTERESTED_MODIFIED_DISTRICT);
 		Default.waitInterval();
 		driver.findElement(By.id("form:municipio")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).sendKeys(INTERESTED_MODIFIED_CITY);
+		driver.findElement(By.id("form:municipio")).sendKeys(Field.INTERESTED_MODIFIED_CITY);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
@@ -483,29 +456,29 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
-		assertEquals(INTERESTED_MODIFIED_NAME,
+		assertEquals(Field.INTERESTED_MODIFIED_NAME,
 				driver.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_TITLE, driver
+		assertEquals(Field.INTERESTED_MODIFIED_TITLE, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[2]/td[2]")).getText());
-		assertEquals(INTERESTED_CPF, driver
+		assertEquals(Field.INTERESTED_CPF, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[3]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_MANAGER_UNITY, driver
+		assertEquals(Field.INTERESTED_MODIFIED_MANAGER_UNITY, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[4]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_STREET, driver
+		assertEquals(Field.INTERESTED_MODIFIED_STREET, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[5]/td[2]")).getText());
-		assertEquals(INTERESTED_ADDRESS_NUMBER, driver
+		assertEquals(Field.INTERESTED_ADDRESS_NUMBER, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[6]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_DISTRICT, driver
+		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[7]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_COMPLEMENT, driver
+		assertEquals(Field.INTERESTED_MODIFIED_COMPLEMENT, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[8]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_DISTRICT, driver
+		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[9]/td[2]")).getText());
-		assertEquals(INTERESTED_POSTAL_CODE, driver
+		assertEquals(Field.INTERESTED_POSTAL_CODE, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[10]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_CITY, driver
+		assertEquals(Field.INTERESTED_MODIFIED_CITY, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[11]/td[2]")).getText());
-		assertEquals(INTERESTED_UF, driver
+		assertEquals(Field.INTERESTED_UF, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[12]/td[2]")).getText());
 	}
 	
@@ -532,7 +505,7 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(INTERESTED_NAME);
+		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(Field.INTERESTED_NAME);
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
 		Default.waitInterval();
@@ -540,15 +513,15 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:logradouro")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).sendKeys(INTERESTED_MODIFIED_STREET);
+		driver.findElement(By.id("form:logradouro")).sendKeys(Field.INTERESTED_MODIFIED_STREET);
 		Default.waitInterval();
 		driver.findElement(By.id("form:bairro")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).sendKeys(INTERESTED_MODIFIED_DISTRICT);
+		driver.findElement(By.id("form:bairro")).sendKeys(Field.INTERESTED_MODIFIED_DISTRICT);
 		Default.waitInterval();
 		driver.findElement(By.id("form:municipio")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).sendKeys(INTERESTED_MODIFIED_CITY);
+		driver.findElement(By.id("form:municipio")).sendKeys(Field.INTERESTED_MODIFIED_CITY);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
@@ -562,21 +535,53 @@ public class ArDigitalSendDocumentTest {
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
-		assertEquals(INTERESTED_NAME,
+		assertEquals(Field.INTERESTED_NAME,
 				driver.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_STREET, driver
+		assertEquals(Field.INTERESTED_MODIFIED_STREET, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[5]/td[2]")).getText());
-		assertEquals(INTERESTED_ADDRESS_NUMBER, driver
+		assertEquals(Field.INTERESTED_ADDRESS_NUMBER, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[6]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_DISTRICT, driver
+		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[7]/td[2]")).getText());
-		assertEquals(INTERESTED_POSTAL_CODE, driver
+		assertEquals(Field.INTERESTED_POSTAL_CODE, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[10]/td[2]")).getText());
-		assertEquals(INTERESTED_MODIFIED_CITY, driver
+		assertEquals(Field.INTERESTED_MODIFIED_CITY, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[11]/td[2]")).getText());
-		assertEquals(INTERESTED_UF, driver
+		assertEquals(Field.INTERESTED_UF, driver
 				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[12]/td[2]")).getText());
 	}
+	
+	/**
+	 * Caso de teste para verificar se nomes de intereassados já cadastrados
+	 * são exibidos no campo autocomplete, durante o envio de documentos.  
+	 * @throws Exception
+	 */
+	@Test
+	  public void sendDocumentSelectRegisteredUser() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_label")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:tipo_1")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).clear();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:j_idt49_next")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+	    Default.waitInterval();
+	    driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("JOSÉ DA SILVA");
+	    Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
+	    Default.waitInterval();
+	    assertEquals("JOSÉ DA SILVA", driver.findElement(By.id("form:gestorAutocomplete_input")).getText());
+	}
+	
+	
 
 	@After
 	public void tearDown() throws Exception {
@@ -595,25 +600,4 @@ public class ArDigitalSendDocumentTest {
 			return false;
 		}
 	}
-	
-	//TODO Terminar de refatorar os testes colocando essas constantes
-	//TODO mover para Config
-	public static final String INTERESTED_CPF = "050.726.643-92";
-	public static final String INTERESTED_NAME = "SAULO DE TÁRSIO SILVA SOUSA";
-	public static final String INTERESTED_MANAGER_UNITY = "FMAS DE SAO FRANCISCO DO PIAUI";
-	public static final String INTERESTED_TITLE = "PREFEITO";
-	public static final String INTERESTED_STREET = "RUA JOÃO MARTINIANO";
-	public static final String INTERESTED_ADDRESS_NUMBER = "1290";
-	public static final String INTERESTED_COMPLEMENT = "";
-	public static final String INTERESTED_DISTRICT = "COLIBRI";
-	public static final String INTERESTED_POSTAL_CODE = "64.240-000";
-	public static final String INTERESTED_CITY = "PIRACURUCA";
-	public static final String INTERESTED_UF = "PI";
-	public static final String INTERESTED_MODIFIED_NAME = "SAULO DE TÁRSIO SILVA SOUSA MODIFICADO";
-	public static final String INTERESTED_MODIFIED_MANAGER_UNITY = "FMAS DE SAO FRANCISCO DO PIAUI MODIFICADO";
-	public static final String INTERESTED_MODIFIED_TITLE = "PREFEITO MODIFICADO";
-	public static final String INTERESTED_MODIFIED_STREET = "RUA JOÃO MARTINIANO MODIFICADO";
-	public static final String INTERESTED_MODIFIED_DISTRICT = "COLIBRI MODIFICADO";
-	public static final String INTERESTED_MODIFIED_COMPLEMENT = "COMPLEMENTO MODIFICADO";
-	public static final String INTERESTED_MODIFIED_CITY = "PIRACURUCA MODIFICADO";
 }
