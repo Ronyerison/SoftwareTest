@@ -50,6 +50,12 @@ public class ArDigitalMonitorSendingTest {
 						.getText());
 	}
 	
+	/**
+	 * 
+	 * Caso de teste para busca avançada pelo campo "DECLARAÇÃO" durante o acompanhamento de envio. 
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void monitorSendingAdvancedSearchDeclarationField() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
@@ -69,6 +75,11 @@ public class ArDigitalMonitorSendingTest {
 		assertEquals("SAULO DE TÁRSIO SILVA SOUSA", driver.findElement(By.cssSelector("td")).getText());
 	}
 	
+	/**
+	 *  Caso de teste para busca avançada pelo campos "DATA" durante o acompanhamento de envio. 
+	 *  
+	 * @throws Exception
+	 */
 	@Test
 	  public void monitorSendingAdvancedSearchDateField() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -90,6 +101,89 @@ public class ArDigitalMonitorSendingTest {
 	    String tableDate = driver.findElement(By.xpath("//tbody[@id='formTabelaDocumentos:tabelaAcompanhamento_data']/tr/td[3]")).getText();
 	    Default.waitInterval();
 	    assertEquals(actualDate, tableDate.substring(0, 10));	
+	}
+	
+	/**
+	 * Caso de teste para busca avançada pelo campo "OPERADOR" durante o acompanhamento de envio 
+	 * com usuário ADMINISTRADOR.
+	 *  
+	 * @throws Exception
+	 */
+	@Test
+	  public void testAdvancedSearchForOperatorWithAdministratorUser() throws Exception {
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+		Default.sendDocument(driver);
+		Default.waitInterval();
+		Default.logout(driver);
+		Default.waitInterval();
+		Default.login(driver, UserFactory.createAdministratorUser());
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:operadorAutocomplete_input")).clear();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:operadorAutocomplete_input")).sendKeys(Config.COMMON_USER_NAME);
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:ajax")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formTabelaDocumentos:tabelaAcompanhamento:0:detalheDocumentoEnvio")).click();
+	    Default.waitInterval();
+	    assertEquals(Config.COMMON_USER_NAME, driver.findElement(By.xpath("//table[@id='formDetalhesDocumento:j_idt136']/tbody/tr/td[2]")).getText());
+	  }
+	
+	/**
+	 * Caso de teste para busca avançada pelo campo "SETOR RESPONSÁVEL" durante o acompanhamento de envio. 
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAdvancedSearchForSender() throws Exception {
+		Default.login(driver, UserFactory.createAdministratorUser());
+		Default.waitInterval();
+		Default.sendDocument(driver);
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:setorAutocomplete_input")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:setorAutocomplete_input")).sendKeys("UFPI - Universidade Federal do Pauí");
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:ajax")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("formTabelaDocumentos:tabelaAcompanhamento:0:detalheDocumentoEnvio")).click();
+		Default.waitInterval();
+	    assertEquals(Field.ADMINISTRATOR_USER_SECTOR, driver.findElement(By.xpath("//table[@id='formDetalhesDocumento:j_idt136']/tbody/tr[2]/td[2]")).getText());
+	}
+	
+	/**
+	 * Caso de teste para busca avançada pelo campo "SETOR REMETENTE" durante o acompanhamento de envio. 
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAdvancedSearchForSectorSender() throws Exception {
+		Default.login(driver, UserFactory.createAdministratorUser());
+		Default.waitInterval();
+		Default.sendDocument(driver);
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:setorAutocomplete_input")).clear();
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:setorRemtenteAutocomplete_input")).sendKeys("UFPI - Universidade Federal do Pauí");
+		Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:ajax")).click();
+		Default.waitInterval();
+	    driver.findElement(By.id("formTabelaDocumentos:tabelaAcompanhamento:0:detalheDocumentoEnvio")).click();
+		Default.waitInterval();
+	    assertEquals(Field.ADMINISTRATOR_USER_SECTOR, driver.findElement(By.xpath("//table[@id='formDetalhesDocumento:j_idt136']/tbody/tr[3]/td[2]")).getText());
 	}
 
 	@After

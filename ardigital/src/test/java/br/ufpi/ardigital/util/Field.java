@@ -20,4 +20,5 @@ public class Field {
 	public static final String INTERESTED_MODIFIED_COMPLEMENT = "COMPLEMENTO MODIFICADO";
 	public static final String INTERESTED_MODIFIED_CITY = "PIRACURUCA MODIFICADO";
 	public static final String DECLARATION_TEXT_SEND_DOC = "TESTE DOCUMENTO VÁLIDO";
+	public static final String ADMINISTRATOR_USER_SECTOR = "UFPI - Universidade Federal do Piauí";
 }
