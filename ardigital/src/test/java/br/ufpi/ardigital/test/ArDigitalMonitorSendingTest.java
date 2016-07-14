@@ -110,7 +110,7 @@ public class ArDigitalMonitorSendingTest {
 	 * @throws Exception
 	 */
 	@Test
-	  public void testAdvancedSearchForOperatorWithAdministratorUser() throws Exception {
+	  public void monitorSendingAdvancedSearchForOperatorWithAdministratorUser() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		Default.sendDocument(driver);
@@ -140,7 +140,7 @@ public class ArDigitalMonitorSendingTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testAdvancedSearchForSender() throws Exception {
+	public void monitorSendingAdvancedSearchForSender() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
 		Default.waitInterval();
 		Default.sendDocument(driver);
@@ -166,7 +166,7 @@ public class ArDigitalMonitorSendingTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testAdvancedSearchForSectorSender() throws Exception {
+	public void monitorSendingAdvancedSearchForSectorSender() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
 		Default.waitInterval();
 		Default.sendDocument(driver);
