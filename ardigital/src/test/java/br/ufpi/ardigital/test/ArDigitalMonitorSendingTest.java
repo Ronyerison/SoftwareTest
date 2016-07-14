@@ -51,12 +51,19 @@ public class ArDigitalMonitorSendingTest {
 	@Test
 	public void monitorSendingAdvancedSearchDeclarationField() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
 		Default.sendDocument(driver);
+		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		Default.waitInterval();
 		driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+		Default.waitInterval();
 		driver.findElement(By.id("formPesquisar:declaracaoDeConteudo")).clear();
+		Default.waitInterval();
 		driver.findElement(By.id("formPesquisar:declaracaoDeConteudo")).sendKeys(Field.DECLARATION_TEXT_SEND_DOC.substring(0, 15));
+		Default.waitInterval();
 		driver.findElement(By.id("formPesquisar:ajax")).click();
+		Default.waitInterval();
 		assertEquals("SAULO DE TÁRSIO SILVA SOUSA", driver.findElement(By.cssSelector("td")).getText());
 	}
 
