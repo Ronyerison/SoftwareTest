@@ -3,6 +3,8 @@ package br.ufpi.ardigital.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -65,6 +67,29 @@ public class ArDigitalMonitorSendingTest {
 		driver.findElement(By.id("formPesquisar:ajax")).click();
 		Default.waitInterval();
 		assertEquals("SAULO DE TÁRSIO SILVA SOUSA", driver.findElement(By.cssSelector("td")).getText());
+	}
+	
+	@Test
+	  public void monitorSendingAdvancedSearchDateField() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String actualDate = sdf.format(Calendar.getInstance().getTime());
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+		Default.sendDocument(driver);
+		Default.waitInterval();
+	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.xpath("//fieldset[@id='formPesquisar:j_idt66']/legend")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:j_idt83_input")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:j_idt86_input")).click();
+	    Default.waitInterval();
+	    driver.findElement(By.id("formPesquisar:ajax")).click();
+	    Default.waitInterval();
+	    String tableDate = driver.findElement(By.xpath("//tbody[@id='formTabelaDocumentos:tabelaAcompanhamento_data']/tr/td[3]")).getText();
+	    Default.waitInterval();
+	    assertEquals(actualDate, tableDate.substring(0, 10));	
 	}
 
 	@After

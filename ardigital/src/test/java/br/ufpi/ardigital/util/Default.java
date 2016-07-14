@@ -26,7 +26,7 @@ public class Default {
 	public static final int IGNORE_FIELD_NONE = 11;
 	
 	public static final void waitInterval() throws InterruptedException{
-		Thread.sleep(100);
+		Thread.sleep(500);
 	}
 	
 	public static final void login(WebDriver driver, User validUser) throws InterruptedException {
