@@ -28,28 +28,14 @@ public class ArDigitalDownloadDocumentTest {
 
 	@Test
 	public void downloadDocumentInvalidTest() throws Exception {
-		driver.get(Config.BASE_URL + Config.DOWNLOAD_URL);
-		Default.waitInterval();
-		driver.findElement(By.id("formPrincipal:j_idt28")).click();
-		Default.waitInterval();
-		assertEquals("A chave de acesso deve ser informada.", driver
-				.findElement(By.cssSelector("span.ui-messages-error-summary"))
-				.getText());
-	}
-	
-	@Test
-	public void downloadDocumentInvalidKeyTest() throws Exception {
-		driver.get(Config.BASE_URL + Config.DOWNLOAD_URL);
-		Default.waitInterval();
-		driver.findElement(By.id("formPrincipal:j_idt26")).sendKeys("Chave Inválida");
-		Default.waitInterval();
-		driver.findElement(By.id("formPrincipal:j_idt28")).click();
-		Default.waitInterval();
-		assertEquals("O captcha deve ser processado.", driver
-				.findElement(By.cssSelector("span.ui-messages-error-summary"))
-				.getText());
+		downloadWithoutKey(Config.BASE_URL + Config.DOWNLOAD_URL, "A chave de acesso deve ser informada.");
 	}
 
+	@Test
+	public void downloadDocumentInvalidKeyTest() throws Exception {
+		downloadWithoutCaptcha(Config.BASE_URL + Config.DOWNLOAD_URL, "O captcha deve ser processado.");
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 		driver.quit();
@@ -57,6 +43,34 @@ public class ArDigitalDownloadDocumentTest {
 		if (!"".equals(verificationErrorString)) {
 			fail(verificationErrorString);
 		}
+	}
+
+	/**
+	 * @throws InterruptedException
+	 */
+	private void downloadWithoutKey(String url, String returnMsg) throws InterruptedException {
+		driver.get(url);
+		Default.waitInterval();
+		driver.findElement(By.id("formPrincipal:j_idt28")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg, driver
+				.findElement(By.cssSelector("span.ui-messages-error-summary"))
+				.getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void downloadWithoutCaptcha(String url, String returnMsg) throws InterruptedException {
+		driver.get(url);
+		Default.waitInterval();
+		driver.findElement(By.id("formPrincipal:j_idt26")).sendKeys("Chave Inválida");
+		Default.waitInterval();
+		driver.findElement(By.id("formPrincipal:j_idt28")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg, driver
+				.findElement(By.cssSelector("span.ui-messages-error-summary"))
+				.getText());
 	}
 
 }

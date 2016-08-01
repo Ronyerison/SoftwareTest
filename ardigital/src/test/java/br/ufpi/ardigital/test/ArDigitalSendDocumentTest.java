@@ -39,7 +39,7 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentValidTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 	}
 
 	/**
@@ -50,23 +50,7 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentInvalidTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Cobrança teste");
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertEquals("É necessário informar um Interessado",
-				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		sendDocumentWithoutInterested("Cobrança teste", "É necessário informar um Interessado");
 	}
 
 	/**
@@ -78,26 +62,10 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentInvalidReceiverRegisterTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:tipo']/div[3]")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Teste cadastro usuario invalido.");
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertEquals("É necessário inserir o bairro do endereço",
-				driver.findElement(By.xpath("//div[@id='form:camposInteressadoMessage']/div/ul/li[5]/span")).getText());
+		sendDocumentWithoutFields("Teste cadastro usuario invalido.", "É necessário inserir o bairro do endereço");
 	}
+
+	
 
 	/**
 	 * Teste para envio de um documento enviando os anexos para o e-carta com
@@ -108,61 +76,10 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentInvalidPagesLimitTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Documento com páginas acima do limite.");
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("SAULO DE TÁRSIO");
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:checkboxEnviarAnexos")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertTrue(isElementPresent(By.cssSelector("span.ui-messages-error-summary")));
+		sendDocumentAttachmentsWithECarta("Documento com páginas acima do limite.", "SAULO DE TÁRSIO");
 	}
+
+	
 
 	/**
 	 * Teste para envio de um documento enviando sem os anexos para o e-carta
@@ -173,62 +90,10 @@ public class ArDigitalSendDocumentTest {
 	@Test
 	public void sendDocumentValidPagesLimitTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Documento com páginas acima do limite.");
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("SAULO DE TÁRSIO");
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:ajax")).click();
-		Default.waitInterval();
-		assertEquals("Documento encaminhado com sucesso!",
-				driver.findElement(By.cssSelector("div.ui-grid-col-12")).getText());
+		sendDocumentAttachmentsOverLimit("Documento com páginas acima do limite.", "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 	}
+
+	
 
 	/**
 	 * Teste para envio de um documento inserindo um novo cadastro de
@@ -599,5 +464,175 @@ public class ArDigitalSendDocumentTest {
 		} catch (NoSuchElementException e) {
 			return false;
 		}
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void sendDocumentWithoutInterested(String description, String returnMsg) throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys(description);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg,
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void sendDocumentWithoutFields(String description, String returnMsg) throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='form:tipo']/div[3]")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys(description);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg,
+				driver.findElement(By.xpath("//div[@id='form:camposInteressadoMessage']/div/ul/li[5]/span")).getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void sendDocumentAttachmentsOverLimit(String description, String receiver, String returnMsg) throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys(description);
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(receiver);
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:ajax")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg,
+				driver.findElement(By.cssSelector("div.ui-grid-col-12")).getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void sendDocumentAttachmentsWithECarta(String description, String receiver)
+			throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:conteudo")).sendKeys(description);
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:tipo_1")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(receiver);
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+		driver.findElement(By.id("form:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("form:j_idt49_next")).click();
+		Default.waitInterval();
+		assertTrue(isElementPresent(By.cssSelector("span.ui-messages-error-summary")));
 	}
 }

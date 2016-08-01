@@ -15,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
+import br.ufpi.ardigital.util.Field;
 
 public class ArDigitalManagePermissionsTest {
 	private WebDriver driver;
@@ -36,27 +37,7 @@ public class ArDigitalManagePermissionsTest {
 	@Test
 	public void filterByOperatorTest() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
-		Default.waitInterval();
-		driver.findElement(
-				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:j_idt51_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:j_idt51_2")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:it_nomeOperador")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:it_nomeOperador")).sendKeys(
-				Config.COMMON_USER_NAME);
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:j_idt112")).click();
-		Default.waitInterval();
-		assertEquals(
-				Config.COMMON_USER_NAME,
-				driver.findElement(
-						By.cssSelector("tr.ui-widget-content.ui-datatable-even > td"))
-						.getText());
+		findOperator(Config.COMMON_USER_NAME);
 	}
 
 	/**
@@ -74,7 +55,7 @@ public class ArDigitalManagePermissionsTest {
 		Default.waitInterval();
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 		driver.findElement(
 				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span"))
@@ -93,6 +74,83 @@ public class ArDigitalManagePermissionsTest {
 		Default.waitInterval();
 		Default.login(driver, UserFactory.createAdministratorUser());
 		changePermissionUser(false);
+	}
+
+	
+
+	/**
+	 * Teste que realiza busca por nome nos setores
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void findSectorByNameTest() throws Exception {
+		Default.login(driver, UserFactory.createAdministratorUser());
+		findSectorByName("DIRETORIA", "DIRETORIA PROCESSUAL");
+	}
+
+	
+	@After
+	public void tearDown() throws Exception {
+		driver.quit();
+		String verificationErrorString = verificationErrors.toString();
+		if (!"".equals(verificationErrorString)) {
+			fail(verificationErrorString);
+		}
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void findOperator(String userName) throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(
+				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:j_idt51_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:j_idt51_2")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:it_nomeOperador")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:it_nomeOperador")).sendKeys(
+				userName);
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:j_idt112")).click();
+		Default.waitInterval();
+		assertEquals(
+				userName,
+				driver.findElement(
+						By.cssSelector("tr.ui-widget-content.ui-datatable-even > td"))
+						.getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void findSectorByName(String name, String returnName) throws InterruptedException {
+		Default.waitInterval();
+		driver.findElement(
+				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:autocompleteSetores_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:autocompleteSetores_input"))
+				.sendKeys(name);
+		Default.waitInterval();
+		driver.findElement(
+				By.xpath("//div[@id='j_idt46:autocompleteSetores_panel']/ul/li"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("j_idt46:j_idt58")).click();
+		Default.waitInterval();
+		assertEquals(
+				returnName,
+				driver.findElement(
+						By.cssSelector("tr.ui-widget-content.ui-datatable-even > td"))
+						.getText());
 	}
 
 	/**
@@ -143,45 +201,4 @@ public class ArDigitalManagePermissionsTest {
 				By.xpath("//div[@id='formNotificacaoes:j_idt42_menu']/ul/li/a/span[2]"))
 				.click();
 	}
-
-	/**
-	 * Teste que realiza busca por nome nos setores
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void findSectorByNameTest() throws Exception {
-		Default.login(driver, UserFactory.createAdministratorUser());
-		Default.waitInterval();
-		driver.findElement(
-				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[11]/a/span"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:autocompleteSetores_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:autocompleteSetores_input"))
-				.sendKeys("DIRETORIA");
-		Default.waitInterval();
-		driver.findElement(
-				By.xpath("//div[@id='j_idt46:autocompleteSetores_panel']/ul/li"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(By.id("j_idt46:j_idt58")).click();
-		Default.waitInterval();
-		assertEquals(
-				"DIRETORIA PROCESSUAL",
-				driver.findElement(
-						By.cssSelector("tr.ui-widget-content.ui-datatable-even > td"))
-						.getText());
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
-		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
-		}
-	}
-
 }

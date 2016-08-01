@@ -5,9 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import br.ufpi.ardigital.factory.FileArFactory;
 import br.ufpi.ardigital.factory.UserFactory;
-import br.ufpi.ardigital.model.FileAr;
 import br.ufpi.ardigital.model.User;
 
 public class Default {
@@ -52,7 +50,7 @@ public class Default {
 	/**
 	 * @throws InterruptedException
 	 */
-	public static void sendDocument(WebDriver driver) throws InterruptedException {
+	public static void sendDocument(WebDriver driver, String description, String receiver, String returnMsg) throws InterruptedException {
 		driver.findElement(
 				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span"))
 				.click();
@@ -64,14 +62,14 @@ public class Default {
 		driver.findElement(By.id("form:conteudo")).clear();
 		Default.waitInterval();
 		driver.findElement(By.id("form:conteudo")).sendKeys(
-				Field.DECLARATION_TEXT_SEND_DOC);
+				description);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
 		Default.waitInterval();
 		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(
-				"SAULO DE TÁRSIO");
+				receiver);
 		Default.waitInterval();
 		driver.findElement(
 				By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li"))
@@ -81,16 +79,14 @@ public class Default {
 		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).clear();
 		Default.waitInterval();
-		FileAr file = FileArFactory.createValidFile();
-		Default.waitInterval();
 		driver.findElement(By.id("form:upOficio_input")).sendKeys(
-				file.getPath());
+				Config.FILE_PATH);
 		Default.waitInterval();
 		driver.findElement(By.id("form:j_idt49_next")).click();
 		Default.waitInterval();
 		driver.findElement(By.id("form:ajax")).click();
 		Default.waitInterval();
-		assertEquals("Documento encaminhado com sucesso!",
+		assertEquals(returnMsg,
 				driver.findElement(By.cssSelector("div.ui-grid-col-12"))
 						.getText());
 	}

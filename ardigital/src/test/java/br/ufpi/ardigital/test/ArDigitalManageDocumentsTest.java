@@ -37,19 +37,7 @@ public class ArDigitalManageDocumentsTest {
 	@Test
 	public void filterByNameDocumentTest() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
-		driver.findElement(
-				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[10]/a/span"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).sendKeys(
-				"cobrança");
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:botaoPesquisar")).click();
-		Default.waitInterval();
-		assertEquals("Cobrança",
-				driver.findElement(By.cssSelector("span.sorting_1")).getText());
+		findType("cobrança", "Cobrança");
 	}
 
 	/**
@@ -87,49 +75,7 @@ public class ArDigitalManageDocumentsTest {
 	@Test
 	public void testArDigitalManageDocuments() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
-		driver.findElement(
-				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[10]/a/span"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(
-				By.id("formTabelaTiposDocumentos:botaoAdicionarNovo")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:nomeTipoNovo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:nomeTipoNovo")).sendKeys(
-				"TESTE FUNCIONAL AR DIGITAL");
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:sistemaOrigemNovo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:sistemaOrigemNovo")).sendKeys(
-				"TESTE FUNCIONAL AR DIGITAL");
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:prazoArNovo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:prazoArNovo")).sendKeys("10");
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:botaoSalvarNovo")).click();
-		Default.waitInterval();
-		assertEquals("Tipo de documento cadastrado com sucesso.", driver
-				.findElement(By.cssSelector("span.ui-messages-info-summary"))
-				.getText());
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).sendKeys(
-				"TESTE FUNCIONAL AR DIGITAL");
-		Default.waitInterval();
-		driver.findElement(
-				By.id("formTabelaTiposDocumentos:tabelaTiposDocumentos:0:botaoExcluir"))
-				.click();
-		Default.waitInterval();
-		driver.findElement(By.id("formDialogs:botaoInativarTipo")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("formPesquisar:botaoPesquisar")).click();
-		Default.waitInterval();
-		assertEquals("Tipo de documento excluído com sucesso.", driver
-				.findElement(By.cssSelector("span.ui-messages-info-summary"))
-				.getText());
+		createAndRemoveType("TESTE FUNCIONAL AR DIGITAL", "Tipo de documento cadastrado com sucesso.", "Tipo de documento excluído com sucesso.");
 	}
 
 	@After
@@ -148,6 +94,74 @@ public class ArDigitalManageDocumentsTest {
 		} catch (NoSuchElementException e) {
 			return false;
 		}
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void findType(String description, String returnMsg) throws InterruptedException {
+		driver.findElement(
+				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[10]/a/span"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).sendKeys(
+				description);
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:botaoPesquisar")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg,
+				driver.findElement(By.cssSelector("span.sorting_1")).getText());
+	}
+	
+	/**
+	 * @throws InterruptedException
+	 */
+	private void createAndRemoveType(String description, String returnMsg1, String returnMsg2) throws InterruptedException {
+		driver.findElement(
+				By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[10]/a/span"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(
+				By.id("formTabelaTiposDocumentos:botaoAdicionarNovo")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:nomeTipoNovo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:nomeTipoNovo")).sendKeys(
+				description);
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:sistemaOrigemNovo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:sistemaOrigemNovo")).sendKeys(
+				description);
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:prazoArNovo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:prazoArNovo")).sendKeys("10");
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:botaoSalvarNovo")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg1, driver
+				.findElement(By.cssSelector("span.ui-messages-info-summary"))
+				.getText());
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:tipoParaPesquisa")).sendKeys(
+				description);
+		Default.waitInterval();
+		driver.findElement(
+				By.id("formTabelaTiposDocumentos:tabelaTiposDocumentos:0:botaoExcluir"))
+				.click();
+		Default.waitInterval();
+		driver.findElement(By.id("formDialogs:botaoInativarTipo")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("formPesquisar:botaoPesquisar")).click();
+		Default.waitInterval();
+		assertEquals(returnMsg2, driver
+				.findElement(By.cssSelector("span.ui-messages-info-summary"))
+				.getText());
 	}
 
 }

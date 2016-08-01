@@ -15,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
+import br.ufpi.ardigital.util.Field;
 
 public class ArDigitalApproveDocumentTest {
 	private WebDriver driver;
@@ -36,7 +37,7 @@ public class ArDigitalApproveDocumentTest {
 	@Test
 	public void acceptDocumentValidTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.logout(driver);
 		Default.login(driver, UserFactory.createAdministratorUser());
 		acceptDocument();
@@ -51,7 +52,7 @@ public class ArDigitalApproveDocumentTest {
 	@Test
 	public void rejectDocumentValidTest() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.logout(driver);
 		Default.login(driver, UserFactory.createAdministratorUser());
 		rejectDocument();

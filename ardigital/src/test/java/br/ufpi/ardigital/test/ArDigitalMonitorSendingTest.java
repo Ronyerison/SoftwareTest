@@ -41,7 +41,7 @@ public class ArDigitalMonitorSendingTest {
 	public void monitorSendingSuccessfully() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
 		Default.waitInterval();
@@ -60,7 +60,7 @@ public class ArDigitalMonitorSendingTest {
 	public void monitorSendingAdvancedSearchDeclarationField() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
 		Default.waitInterval();
@@ -86,7 +86,7 @@ public class ArDigitalMonitorSendingTest {
 		String actualDate = sdf.format(Calendar.getInstance().getTime());
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
 	    Default.waitInterval();
@@ -113,7 +113,7 @@ public class ArDigitalMonitorSendingTest {
 	  public void monitorSendingAdvancedSearchForOperatorWithAdministratorUser() throws Exception {
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 		Default.logout(driver);
 		Default.waitInterval();
@@ -143,7 +143,7 @@ public class ArDigitalMonitorSendingTest {
 	public void monitorSendingAdvancedSearchForSender() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
 		Default.waitInterval();
@@ -169,7 +169,7 @@ public class ArDigitalMonitorSendingTest {
 	public void monitorSendingAdvancedSearchForSectorSender() throws Exception {
 		Default.login(driver, UserFactory.createAdministratorUser());
 		Default.waitInterval();
-		Default.sendDocument(driver);
+		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
 		Default.waitInterval();
 	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
 		Default.waitInterval();
