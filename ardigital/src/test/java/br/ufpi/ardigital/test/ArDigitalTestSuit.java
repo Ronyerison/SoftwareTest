@@ -5,13 +5,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ArDigitalLoginTest.class,
-	ArDigitalSendDocumentTest.class,
-	ArDigitalMonitorSendingTest.class,
-	ArDigitalApproveDocumentTest.class,
-	ArDigitalDownloadDocumentTest.class,
-	ArDigitalManagePermissionsTest.class,
-	ArDigitalManageDocumentsTest.class
+	ArDigitalLoginTest.class, //ok
+	ArDigitalLogoutTest.class, //ok
+	ArDigitalSendDocumentTest.class, //ok
+	ArDigitalApproveDocumentTest.class, //ok
+	ArDigitalManageDocumentsTest.class, //ok
+	ArDigitalManagePermissionsTest.class, //ok	
 })
 public class ArDigitalTestSuit {
 

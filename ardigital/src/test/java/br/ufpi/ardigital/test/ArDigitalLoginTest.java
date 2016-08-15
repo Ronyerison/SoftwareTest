@@ -12,10 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import br.ufpi.ardigital.factory.UserFactory;
-import br.ufpi.ardigital.model.User;
 import br.ufpi.ardigital.util.Config;
-import br.ufpi.ardigital.util.Default;
 
 public class ArDigitalLoginTest {
 	private WebDriver driver;
@@ -27,46 +24,105 @@ public class ArDigitalLoginTest {
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
-
+	
+	/**
+	 * Testar login sem senha
+	 * @throws Exception
+	 */
 	@Test
-	public void validLogintest() throws Exception {
-		User usuarioValido = UserFactory.createCommonUser();
-		Default.login(driver, usuarioValido);
-		assertEquals(usuarioValido.getLogin(),
-				driver.findElement(By.id("formNotificacaoes:j_idt41_button"))
-						.getText());
-	}
-
-	@Test
-	public void loginInvalidTest() throws Exception {
-		Default.login(driver, UserFactory.createInvalidUser());
-		assertEquals(
-				"Usuário ou senha incorretos",
-				driver.findElement(
-						By.cssSelector("span.ui-messages-error-summary"))
-						.getText());
+	public void testarLoginSemSenha() throws Exception {
+		driver.get("http://localhost:8080/ar-digital/login.xhtml");
+		
+		driver.findElement(By.id("formLogin:username")).clear();
+		driver.findElement(By.id("formLogin:username")).sendKeys("teste");
+		driver.findElement(By.id("formLogin:botaoLogin")).click();
+		
+		assertEquals("É necessário informar uma senha", driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		
+		driver.quit();
 	}
 	
+	/**
+	 * Testar login sem usuário
+	 * @throws Exception
+	 */
 	@Test
-	public void loginUserInvalidTest() throws Exception {
-		Default.login(driver, UserFactory.createIvalidLoginUser());
-		assertEquals(
-				"Usuário ou senha incorretos",
-				driver.findElement(
-						By.cssSelector("span.ui-messages-error-summary"))
-						.getText());
+	public void testarLoginSemUsuario() throws Exception {
+		driver.get("http://localhost:8080/ar-digital/login.xhtml");
+		
+		driver.findElement(By.id("formLogin:username")).clear();
+		driver.findElement(By.id("formLogin:senha")).sendKeys("teste");
+		driver.findElement(By.id("formLogin:botaoLogin")).click();
+		
+		assertEquals("É necessário informar um usuário", driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		
+		driver.quit();
 	}
 	
+	/**
+	 * Testar login com senha ou usuário incorretos
+	 * @throws Exception
+	 */
 	@Test
-	public void passwordUserInvalidTest() throws Exception {
-		Default.login(driver, UserFactory.createIvalidPasswordUser());
-		assertEquals(
-				"Usuário ou senha incorretos",
-				driver.findElement(
-						By.cssSelector("span.ui-messages-error-summary"))
-						.getText());
+	public void testarLoginSenhaUsuarioSenhaIncorretos() throws Exception {
+		driver.get("http://localhost:8080/ar-digital/login.xhtml");
+		
+		driver.findElement(By.id("formLogin:username")).sendKeys("teste");
+		driver.findElement(By.id("formLogin:senha")).sendKeys("teste");
+		driver.findElement(By.id("formLogin:botaoLogin")).click();
+		
+		assertEquals("Usuário ou senha incorretos", driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		
+		driver.quit();
+	}
+	
+	/**
+	 * Testar login com senha e usuário corretos.
+	 * 
+	 * <p>
+	 *	Teste com operador administrador
+	 *
+	 * @throws Exception caso ocorra falhas ao realizar o teste
+	 */
+	@Test
+	public void testarLoginOk1() throws Exception {
+		driver.get("http://localhost:8080/ar-digital/login.xhtml");
+		
+		driver.findElement(By.id("formLogin:username")).sendKeys(Config.ADMINISTRATOR_USER_NAME);
+		driver.findElement(By.id("formLogin:senha")).sendKeys(Config.ADMINISTRATOR_USER_PASSWORD);
+		driver.findElement(By.id("formLogin:botaoLogin")).click();
+		
+		assertEquals("saulo.silva", driver.findElement(By.xpath("//button[@id='formNotificacaoes:acaoSair_button']/span[2]")).getText());
+		
+		assertEquals("Principal", driver.findElement(By.xpath("//div[@id='formNotificacaoes:j_idt37']/ul/li[2]/a")).getText());
+		
+		driver.quit();
+	}
+	
+	/**
+	 * Testar login com senha e usuário corretos.
+	 * 
+	 * <p>
+	 *	Teste com operador comum
+	 *
+	 * @throws Exception caso ocorra falhas ao realizar o teste
+	 */
+	@Test
+	public void testarLoginOk2() throws Exception {
+		driver.get("http://localhost:8080/ar-digital/login.xhtml");
+		
+		driver.findElement(By.id("formLogin:username")).sendKeys(Config.COMMON_USER_NAME);
+		driver.findElement(By.id("formLogin:senha")).sendKeys(Config.COMMON_USER_PASSWORD);
+		driver.findElement(By.id("formLogin:botaoLogin")).click();
+		
+		assertEquals("paulo.filho", driver.findElement(By.xpath("//button[@id='formNotificacaoes:acaoSair_button']/span[2]")).getText());
+		
+		assertEquals("Principal", driver.findElement(By.xpath("//div[@id='formNotificacaoes:j_idt37']/ul/li[2]/a")).getText());
+		
+		driver.quit();
 	}
 
+	
 	@After
 	public void tearDown() throws Exception {
 		driver.quit();

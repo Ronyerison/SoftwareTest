@@ -1,27 +1,30 @@
 package br.ufpi.ardigital.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import br.ufpi.ardigital.factory.UserFactory;
 import br.ufpi.ardigital.util.Config;
 import br.ufpi.ardigital.util.Default;
-import br.ufpi.ardigital.util.Field;
 
+/**
+ * Classe que contém os métodos que testam o caso de uso de envio de documentos.
+ * 
+ * 
+ * @author Saulo de Társio
+ *
+ */
 public class ArDigitalSendDocumentTest {
 	private WebDriver driver;
-	private StringBuffer verificationErrors = new StringBuffer();
 
 	@Before
 	public void setUp() throws Exception {
@@ -31,608 +34,784 @@ public class ArDigitalSendDocumentTest {
 	}
 
 	/**
-	 * Teste para envio de um documento válido //TODO: NESSE CASO DE TESTE É
-	 * NECESSÁRIO ALTERAR O DIRETORIO DO ARQUIVO NA CLASSE FileArFactory;
+	 * Teste de envio de documento sem informar o tipo de documento
 	 * 
 	 * @throws Exception
+	 *             caso aconteça falhas ao realizar o teste
 	 */
 	@Test
-	public void sendDocumentValidTest() throws Exception {
+	public void realizarEnvioSemTipoDocumento() throws Exception {
+		// Login com usuário comum
 		Default.login(driver, UserFactory.createCommonUser());
-		Default.sendDocument(driver, Field.DECLARATION_TEXT_SEND_DOC, "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
+		Default.waitInterval();
+
+		// Clicar no link para envio de documentos
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+
+		// informar a declaração de contéudoo
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).sendKeys("Declaração teste");
+
+		// Ir para o próximo passo
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+		assertEquals("É necessário informar um tipo de documento",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento sem selecionar o interessado.
-	 * 
+	 * Teste de envio de documento sem informar a declaração de conteúdo
+	 *
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void sendDocumentInvalidTest() throws Exception {
+	public void realizarEnvioSemDeclaracaoConteudo() throws Exception {
+		// Login
 		Default.login(driver, UserFactory.createCommonUser());
-		sendDocumentWithoutInterested("Cobrança teste", "É necessário informar um Interessado");
+		Default.waitInterval();
+
+		// clica no link para envio de documento
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+
+		// Informa o tipo de documento
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:tipo_2")).click();
+
+		// Ir para o próximo passo
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+		assertEquals("É necessário informar uma declaração de conteúdo",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * destinatario com campos em branco
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * Nesse caso, o método tenta realizar um envio de documento sem informar o
+	 * nome do interessado.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void sendDocumentInvalidReceiverRegisterTest() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		sendDocumentWithoutFields("Teste cadastro usuario invalido.", "É necessário inserir o bairro do endereço");
-	}
-
-	
-
-	/**
-	 * Teste para envio de um documento enviando os anexos para o e-carta com
-	 * numero de páginas acima do limite
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void sendDocumentInvalidPagesLimitTest() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		sendDocumentAttachmentsWithECarta("Documento com páginas acima do limite.", "SAULO DE TÁRSIO");
-	}
-
-	
-
-	/**
-	 * Teste para envio de um documento enviando sem os anexos para o e-carta
-	 * com numero de páginas acima do limite
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void sendDocumentValidPagesLimitTest() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		sendDocumentAttachmentsOverLimit("Documento com páginas acima do limite.", "SAULO DE TÁRSIO", "Documento encaminhado com sucesso!");
-	}
-
-	
-
-	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado valido
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void registerNewInterestedValidTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NONE);
-		assertEquals("Upload de Arquivos",
-				driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
-	}
-
-	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo nome do interessado em branco
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void registerNewInterestedWithoutNameTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NOME);
+	public void realizarEnvioRegistrarNovoInteressadoSemNome() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_NOME);
 		assertEquals("É necessário inserir um nome",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo titulo em branco
+	 * Testa o envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O título do interessado não é informado no momento de definir o
+	 * interessado.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutTitleTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_TITULO);
+	public void realizarEnvioRegistrarNovoInteressadoSemTitulo() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_TITULO);
 		assertEquals("É necessário inserir um titulo",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo logradouro em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado. O logradouro do novo interessado não é informado.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutStreetTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_LOGRADOURO);
-		assertEquals("É necessário inserir o logradouro do endereço",
+	public void realizarEnvioRegistrarNovoInteressadoSemLogradouro() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_LOGRADOURO);
+		assertEquals("É necessário inserir um logradouro",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo numero do endereco em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado. O logradouro do novo interessado não é informado.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutAddressNumberTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_NUMERO);
-		assertEquals("É necessário inserir o número do endereço",
+	public void realizarEnvioRegistrarNovoInteressadoSemNumero() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_NUMERO);
+		assertEquals("É necessário inserir um número de endereço",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo bairro em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado. O CEP do novo interessado não é informado.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutDistrictTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_BAIRRO);
-		assertEquals("É necessário inserir o bairro do endereço",
+	public void realizarEnvioRegistrarNovoInteressadoSemCep() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_CEP);
+		assertEquals("É necessário inserir um CEP",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo CEP em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado sem município.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutPostalCodeTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_CEP);
-		assertEquals("É necessário inserir o número do CEP",
+	public void realizarEnvioRegistrarNovoInteressadoSemMunicipio() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_MUNICIPIO);
+		assertEquals("É necessário inserir um município",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo municipio em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado sem unidade federativa
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutCityTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_MUNICIPIO);
-		assertEquals("É necessário inserir o Município do endereço",
+	public void realizarEnvioRegistrarNovoInteressadoSemUF() throws Exception {
+		Default.registrarNovoInteressado(driver, Default.IGNORE_FIELD_UF);
+		assertEquals("É necessário inserir uma unidade federativa",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com o campo UF em branco
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessado informando um valor errado para a unidade federativa. Nesse
+	 * caso, o valor definido será maior que o permitido para a UF.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithoutFederativeUnitTest() throws Exception {
-		Default.registerNewInterested(driver, Default.IGNORE_FIELD_UF);
-		assertEquals("É necessário inserir a Unidade Federativa",
+	public void realizarEnvioRegistrarNovoInteressadoUFMaiorPermitido() throws Exception {
+		Default.registrarNovoInteressadoUFInvalida(driver, Default.UF_INVALIDA_MAIOR_PERMITIDO);
+		assertEquals("UF: Erro de validação: o comprimento é maior do que o máximo permitido de \"2\"",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
 
 	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com um CPF ja cadastrado
+	 * 
+	 * Teste de envio de documento informando um novo interessado
+	 * 
+	 * <p>
+	 * O método tenta realizar um envio de um documento informando um novo
+	 * interessad,o informando um valor errado para a unidade federativa. Nesse
+	 * caso, o valor definido será menor que o permitido para a UF.
+	 * 
+	 * @see Default#registrarNovoInteressado(WebDriver, int)
 	 * 
 	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
 	 */
 	@Test
-	public void registerNewInterestedWithExistingCPFTest() throws Exception {
+	public void realizarEnvioRegistrarNovoInteressadoUFMenorPermitido() throws Exception {
+		Default.registrarNovoInteressadoUFInvalida(driver, Default.UF_INVALIDA_MENOR_PERMITIDO);
+		assertEquals("UF: Erro de validação: o comprimento é menor do que o mínimo permitido de \"2\"",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
+	}
+
+	/**
+	 * 
+	 * Teste de envio de documento sem informar interessado do envio no campo de
+	 * busca.
+	 * 
+	 * @see Default#login(WebDriver, br.ufpi.ardigital.model.User)
+	 * @see UserFactory#createCommonUser()
+	 * 
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha no teste
+	 */
+	@Test
+	public void realizarEnvioSemBuscarInteressado() throws InterruptedException {
+		// Login
 		Default.login(driver, UserFactory.createCommonUser());
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+
+		// Informar tipo de documento
 		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
+		driver.findElement(By.id("formEnviarDocumento:tipo_label")).click();
 		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
+		driver.findElement(By.id("formEnviarDocumento:tipo_2")).click();
+
+		// Informar a declaração de conteúdo
 		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).sendKeys("Declaração teste");
 		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Teste.");
+
+		// ir para o próximo passo
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
+
+		// ir para o próximo passo
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
 		Default.waitInterval();
+
+		assertEquals("É necessário informar um interessado",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 * Teste para envio de um documento inserindo um novo cadastro de
+	 * interessado com um CPF já cadastrado na base de dados do Ar Digital
+	 *
+	 * @see Default#login(WebDriver, br.ufpi.ardigital.model.User)
+	 * @see UserFactory#createCommonUser()
+	 *
+	 * @throws Exception
+	 *             caso ocorra alguma falha no teste
+	 */
+	@Test
+	public void realizarEnvioInteressadoCpfExistente() throws Exception {
+		// Login
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+
+		// Link de envio de documentos
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+		Default.waitInterval();
+
+		// Tipo do documento
+		driver.findElement(By.id("formEnviarDocumento:tipo_label")).click();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:tipo_1")).click();
+		// Declaração de conteúdo
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).sendKeys("Declaração de conteúdo");
+		Default.waitInterval();
+
+		// ir para o step interessado
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+		Default.waitInterval();
+
+		// Informar novo interessado
 		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
+
+		// Informar o cpf do interessado
 		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).clear();
+		driver.findElement(By.id("formEnviarDocumento:cpf")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).sendKeys("111.111.111-11");
+		driver.findElement(By.id("formEnviarDocumento:cpf")).sendKeys("07321910334");
 		Default.waitInterval();
-		driver.findElement(By.id("form:unidadeGestora")).click();
+		driver.findElement(By.id("formEnviarDocumento:unidadeGestora")).click();
+
 		Default.waitInterval();
-		assertEquals("CPF de número 11111111111 já existe.",
+
+		// Mensagem que aparece ao operador ao terminar de digitar o cpf
+		// existente
+		assertEquals("CPF de número 07321910334 já existe",
 				driver.findElement(By.cssSelector("span.ui-messages-info-summary")).getText());
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
+
+		// ir para a aba de uploads
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
 		assertEquals("Upload de Arquivos",
-				driver.findElement(By.xpath("//fieldset[@id='form:j_idt109']/legend")).getText());
-	}
+				driver.findElement(By.xpath("//div[@id='formEnviarDocumento:tabArquivos']/fieldset/legend")).getText());
 
-	/**
-	 * Teste para envio de um documento inserindo um novo cadastro de
-	 * interessado com um CPF ja cadastrado e moficando alguns campos
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void registerNewInterestedWithExistingCPFModifyingData() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Teste de modficacao de interessado.");
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:cpf")).sendKeys(Field.INTERESTED_CPF);
-		Default.waitInterval();
-		driver.findElement(By.id("form:unidadeGestora")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:unidadeGestora")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:unidadeGestora")).sendKeys(Field.INTERESTED_MODIFIED_MANAGER_UNITY);
-		Default.waitInterval();
-		driver.findElement(By.id("form:nomeGestor")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:nomeGestor")).sendKeys(Field.INTERESTED_MODIFIED_NAME);
-		Default.waitInterval();
-		driver.findElement(By.id("form:titulo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:titulo")).sendKeys(Field.INTERESTED_MODIFIED_TITLE);
-		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).sendKeys(Field.INTERESTED_MODIFIED_STREET);
-		Default.waitInterval();
-		driver.findElement(By.id("form:complemento")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:complemento")).sendKeys(Field.INTERESTED_MODIFIED_COMPLEMENT);
-		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).sendKeys(Field.INTERESTED_MODIFIED_DISTRICT);
-		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).sendKeys(Field.INTERESTED_MODIFIED_CITY);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertEquals(Field.INTERESTED_MODIFIED_NAME,
-				driver.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_TITLE, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[2]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_CPF, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[3]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_MANAGER_UNITY, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[4]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_STREET, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[5]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_ADDRESS_NUMBER, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[6]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[7]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_COMPLEMENT, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[8]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[9]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_POSTAL_CODE, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[10]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_CITY, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[11]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_UF, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[12]/td[2]")).getText());
-	}
-	
-	/**
-	 * Teste para envio de um documento com um interessado pre-existente modificando alguns dados
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void modifyInterestedDataTest() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys("Teste.");
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(Field.INTERESTED_NAME);
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:j_idt89']/div[3]")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:logradouro")).sendKeys(Field.INTERESTED_MODIFIED_STREET);
-		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:bairro")).sendKeys(Field.INTERESTED_MODIFIED_DISTRICT);
-		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:municipio")).sendKeys(Field.INTERESTED_MODIFIED_CITY);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertEquals(Field.INTERESTED_NAME,
-				driver.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_STREET, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[5]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_ADDRESS_NUMBER, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[6]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_DISTRICT, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[7]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_POSTAL_CODE, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[10]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_MODIFIED_CITY, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[11]/td[2]")).getText());
-		assertEquals(Field.INTERESTED_UF, driver
-				.findElement(By.xpath("//fieldset[@id='form:j_idt139']/div/div/table/tbody/tr[12]/td[2]")).getText());
-	}
-	
-	/**
-	 * Caso de teste para verificar se nomes de intereassados já cadastrados
-	 * são exibidos no campo autocomplete, durante o envio de documentos.  
-	 * @throws Exception
-	 */
-	@Test
-	  public void sendDocumentSelectRegisteredUser() throws Exception {
-		Default.login(driver, UserFactory.createCommonUser());
-		Default.waitInterval();
-	    driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:tipo_label")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:tipo_1")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:conteudo")).clear();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:conteudo")).sendKeys("Declaração");
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:j_idt49_next")).click();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-	    Default.waitInterval();
-	    driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys("JOSÉ DA SILVA");
-	    Default.waitInterval();
-	    driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-	    Default.waitInterval();
-	    assertEquals("JOSÉ DA SILVA", driver.findElement(By.id("form:gestorAutocomplete_input")).getText());
-	}
-	
-	
-
-	@After
-	public void tearDown() throws Exception {
 		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
-		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
-		}
 	}
 
-	private boolean isElementPresent(By by) {
-		try {
-			driver.findElement(by);
-			return true;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-	
+	// Parte dos arquivos
 	/**
+	 *
+	 * Teste de envio de documento sem carregar ofício e anexos.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
 	 * @throws InterruptedException
+	 *             caso ocorra alguma falha no teste
+	 *
 	 */
-	private void sendDocumentWithoutInterested(String description, String returnMsg) throws InterruptedException {
+	@Test
+	public void realizarEnvioSemOficioEAnexos() throws InterruptedException {
+		// Realizar envio de um documento
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
 		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys(description);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertEquals(returnMsg,
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+		assertEquals("É necessário fazer o upload de pelo menos um anexo ou ofício",
 				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		driver.quit();
 	}
-	
+
 	/**
+	 *
+	 * Teste de envio de documento quando um operador comum carrega apenas os
+	 * anexos e não marca a opção de envio de anexos ao E-Carta.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
 	 * @throws InterruptedException
+	 *             caso ocorra alguma falha no teste
+	 *
+	 *
 	 */
-	private void sendDocumentWithoutFields(String description, String returnMsg) throws InterruptedException {
+	@Test
+	public void realizarEnvioNaoMarcarOpcaoEnvioAnexos() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals("A opção para enviar anexos deve ser marcada",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 *
+	 * Teste de envio de documento quando o operador carrega anexos e estes
+	 * atingem ou ultrapassa o limite de páginas definido no Painel de Controle
+	 * do AR Digital. É necessário deixar um espaço para carregar um ofício de
+	 * pelo menos uma página.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha no ao realizar o teste
+	 */
+	@Test
+	public void realizarEnvioNaoDeixarEspacoOficio() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+
+		for (int i = 0; i < 10; i++) {
+			driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+			Default.waitInterval();
+		}
+		driver.findElement(By.id("formEnviarDocumento:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals(
+				"Você ultrapassou o limite de páginas definido no Painel de Controle apenas com anexos. É necessário deixar espaço para carregar o ofício",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 *
+	 * Teste de envio de documento quando o operador ultrapassa o limite de
+	 * páginas definido no Painel de Controle do AR Digital.
+	 *
+	 * <p>
+	 * Esse envio contém 11 páginas (10 páginas dos anexos + 1 página do
+	 * ofício), sendo que o limite de páginas para este teste é de 10 de
+	 * páginas.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha ao realizar o teste
+	 *
+	 */
+	@Test
+	public void realizarEnvioUltrapassaLimitePaginas() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
+		Default.waitInterval();
+
+		// Ofício
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).sendKeys(Config.FILE_PATH);
+
+		// Anexos
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+
+		for (int i = 0; i < 10; i++) {
+			driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+			Default.waitInterval();
+		}
+
+		driver.findElement(By.id("formEnviarDocumento:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals(
+				"Você ultrapassou o limite de páginas configurado no Painel de Controle. O documento possui 11 páginas. O limite de páginas é 10",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 * Teste de envio de documento com um ofício com orientação em modo
+	 * paisagem.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha ao realizar o teste
+	 */
+	@Test
+	public void realizarEnvioOficioOrientacaoPaisagem() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
+		Default.waitInterval();
+
+		// Ofício
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).sendKeys(Config.OFICIO_PAISAGEM);
+
+		// Anexos
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+
+		for (int i = 0; i < 5; i++) {
+			driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+			Default.waitInterval();
+		}
+		driver.findElement(By.id("formEnviarDocumento:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals("O ofício carregado tem orientação Paisagem. Carregue um ofício com orientação Retrato",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 * Teste de envio de documento com um dos anexos com orientação em modo
+	 * paisagem.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha ao realizar o teste
+	 */
+	@Test
+	public void realizarEnvioAnexoOrientacaoPaisagem() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, false);
+		Default.waitInterval();
+
+		// Ofício
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).sendKeys(Config.FILE_PATH);
+
+		// Anexos 1 - ok
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+
+		// Anexo 2 - orientacao em modo paisagem
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.ANEXO_PAISAGEM);
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals(
+				"Há um anexo com orientação em modo Paisagem. Não é permitido enviar anexo com esse tipo de orientação",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+		
+		driver.quit();
+	}
+
+	/**
+	 * Teste de envio de documento quando o operador pertence ao
+	 * "SETOR PROCESSUAL" ou a um setor que possui o "SETOR PROCESSUAL" como
+	 * lotação superior e o operador não carrega o ofício no momento do envio.
+	 *
+	 * @see Default#enviarDocumentoGenericoParaArquivos(WebDriver, boolean)
+	 *
+	 * @throws InterruptedException
+	 *             caso ocorra alguma falha ao realizar o teste
+	 */
+	@Test
+	public void realizarEnvioSemOficioUserAdm() throws InterruptedException {
+		Default.enviarDocumentoGenericoParaArquivos(driver, true);
+		Default.waitInterval();
+
+		// Anexos 1 - ok
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upAnexo_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:checkboxEnviarAnexos")).click();
+		Default.waitInterval();
+
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		assertEquals("Um ofício dever ser anexado ao envio",
+				driver.findElement(By.cssSelector("span.ui-messages-error-summary")).getText());
+
+		driver.quit();
+	}
+
+	/**
+	 * Método que faz o envio de um documento e compara as informações do
+	 * documento enviado na tela de acompanhamento de envios. O interessado é
+	 * selecionado da base de dados do TCE.
+	 *
+	 * @throws InterruptedException
+	 *             caso aconteça alguma falha ao realizar o teste
+	 * 
+	 * @see Default#login(WebDriver, br.ufpi.ardigital.model.User)
+	 * @see Default#sendDocument(WebDriver, String, String, String)
+	 */
+	@Test
+	public void realizarEnvioConfirmarDadosTelaAcompanhamento() throws InterruptedException {
+		// Realiza o login
+		Default.login(driver, UserFactory.createCommonUser());
+		Default.waitInterval();
+
+		// Faz o envio do documento
+		Default.sendDocument(driver, "Declaração de conteúdo teste", "Maria das", "Documento encaminhado com sucesso!");
+		Default.waitInterval();
+
+		// Maximizar janela
+		driver.manage().window().maximize();
+
+		// tela de acompanhamento
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		// detalhes do documento
+		driver.findElement(By.id("formTabelaDocumentos:tabelaAcompanhamento:0:detalheDocumentoEnvio")).click();
+		Default.waitInterval();
+
+		// Confirmar os dados do documento enviado
+		Default.verificarDadosDocumento(driver, "paulo.filho", "SETOR NÃO DEFINIDO", "SETOR NÃO DEFINIDO",
+				"Notificação", "Declaração de conteúdo teste", "Envio solicitado");
+
+		Default.verificarDadosInteressado(driver, "MARIA DAS GRAÇAS ERNESTO COSTA MARTINS", "DIRETOR(A)",
+				"HOSP. AREOLINO DE ABREU / TERESINA", "64049440", "AV. LINDOLFO MONTEIRO", "2212", "", "JOCKEY CLUB",
+				"Teresina", "PI");
+
+		// Remover o envio da tabela para não causar problemas para o teste de
+		// aprovação de envios.
+		
+		//realiza logout
+		Default.logout(driver);
+		
+		Default.login(driver, UserFactory.createAdministratorUser());
+		Default.waitInterval();
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[13]/a/span")).click();
+		Default.rejeitarEnvioGenerico(driver);
+		
+		Default.logout(driver);
+		
+		driver.quit();
+
+	}
+
+	/**
+	 * Método que realiza um envio de um documento para um interessado que será
+	 * cadastrado no processo de envio.
+	 *
+	 *
+	 */
+	@Test
+	public void realizarEnvioNovoInteressadoVerificarEnvio() throws InterruptedException {
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss");
+
+		String nomeInteressado = "NOVO INTERESSADO " + sdf.format(new Date(System.currentTimeMillis()));
+		
+		// Realiza o login
+		Default.login(driver, UserFactory.createAdministratorUser());
+
+		// Eviar documento
 		Default.waitInterval();
 		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
+
+		// Step one
 		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:tipo']/div[3]")).click();
+		driver.findElement(By.id("formEnviarDocumento:tipo_label")).click();
 		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
+		driver.findElement(By.id("formEnviarDocumento:tipo_2")).click();
+
 		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).clear();
 		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys(description);
+		driver.findElement(By.id("formEnviarDocumento:conteudo")).sendKeys("Declaração teste");
+
+		// Ir para o próximo passo =>
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
 		Default.waitInterval();
+
+		// NOVO INTERESSADO
 		driver.findElement(By.cssSelector("div.ui-inputswitch-handle.ui-state-default")).click();
 		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
+
+		// Nome do interessado
+		driver.findElement(By.id("formEnviarDocumento:nomeGestor")).clear();
 		Default.waitInterval();
-		assertEquals(returnMsg,
-				driver.findElement(By.xpath("//div[@id='form:camposInteressadoMessage']/div/ul/li[5]/span")).getText());
+		driver.findElement(By.id("formEnviarDocumento:nomeGestor")).sendKeys(nomeInteressado);
+		Default.waitInterval();
+
+		// Titulo
+		driver.findElement(By.id("formEnviarDocumento:titulo")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:titulo")).sendKeys("DIRETOR");
+		Default.waitInterval();
+
+		// LOGRADOURO
+		driver.findElement(By.id("formEnviarDocumento:logradouro")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:logradouro")).sendKeys("RUA TESTE");
+		Default.waitInterval();
+
+		// NUMERO
+		driver.findElement(By.id("formEnviarDocumento:numero")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:numero")).sendKeys("1111");
+		Default.waitInterval();
+
+		// bairro
+		driver.findElement(By.id("formEnviarDocumento:bairro")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:bairro")).sendKeys("BAIRRO TESTE");
+		Default.waitInterval();
+
+		// CEP
+		driver.findElement(By.id("formEnviarDocumento:cep")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:cep")).sendKeys("64000000");
+		Default.waitInterval();
+
+		// municipio
+		driver.findElement(By.id("formEnviarDocumento:municipio")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:municipio")).sendKeys("MUNICIPIO TESTE");
+		Default.waitInterval();
+
+		// UF
+		driver.findElement(By.id("formEnviarDocumento:uf")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:uf")).sendKeys("PI");
+
+		// Próximo step
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		// carrega ofício
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).clear();
+		Default.waitInterval();
+		driver.findElement(By.id("formEnviarDocumento:upOficio_input")).sendKeys(Config.FILE_PATH);
+		Default.waitInterval();
+
+		// próximo step =>
+		driver.findElement(By.id("formEnviarDocumento:passosEnvioDocumento_next")).click();
+
+		// enviar o documento
+		driver.findElement(By.id("formEnviarDocumento:ajax")).click();
+		Default.waitInterval();
+
+		
+		// Maximizar janela
+		driver.manage().window().maximize();
+		
+		// detalhes do envio
+		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[5]/a/span")).click();
+		driver.findElement(By.id("formTabelaDocumentos:tabelaAcompanhamento:0:detalheDocumentoEnvio")).click();
+		Default.waitInterval();
+
+		// Condirmar dados do documento
+		Default.verificarDadosDocumento(driver, "saulo.silva", "DP - Divisão de Protocolo e Comunicação Processual",
+				"DP - Divisão de Protocolo e Comunicação Processual", "Notificação", "Declaração teste", "Envio aprovado");
+
+		// confirmar dados destinatario do envio
+		Default.verificarDadosInteressado(driver, nomeInteressado, "DIRETOR", "", "64000000", "RUA TESTE", "1111", "", "BAIRRO TESTE",
+				"MUNICIPIO TESTE", "PI");
+
+		driver.quit();
 	}
-	
-	/**
-	 * @throws InterruptedException
-	 */
-	private void sendDocumentAttachmentsOverLimit(String description, String receiver, String returnMsg) throws InterruptedException {
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys(description);
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(receiver);
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:ajax")).click();
-		Default.waitInterval();
-		assertEquals(returnMsg,
-				driver.findElement(By.cssSelector("div.ui-grid-col-12")).getText());
-	}
-	
-	/**
-	 * @throws InterruptedException
-	 */
-	private void sendDocumentAttachmentsWithECarta(String description, String receiver)
-			throws InterruptedException {
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='j_idt14:j_idt15']/ul/li[4]/a/span")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:conteudo")).sendKeys(description);
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_label")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:tipo_1")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:gestorAutocomplete_input")).sendKeys(receiver);
-		Default.waitInterval();
-		driver.findElement(By.xpath("//div[@id='form:gestorAutocomplete_panel']/ul/li")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:upOficio_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).clear();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt117_input")).sendKeys(Config.FILE_PATH);
-		Default.waitInterval();
-		driver.findElement(By.id("form:checkboxEnviarAnexos")).click();
-		Default.waitInterval();
-		driver.findElement(By.id("form:j_idt49_next")).click();
-		Default.waitInterval();
-		assertTrue(isElementPresent(By.cssSelector("span.ui-messages-error-summary")));
-	}
+
 }
