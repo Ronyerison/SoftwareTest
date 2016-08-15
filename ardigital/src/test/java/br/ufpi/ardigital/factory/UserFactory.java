@@ -9,6 +9,10 @@ public class UserFactory {
 		return new User(Config.COMMON_USER_NAME, Config.COMMON_USER_PASSWORD);
 	}
 	
+	public static User createCommonUser2() {
+		return new User(Config.COMMON_USER_NAME_2, Config.COMMON_USER_PASSWORD_2);
+	}
+	
 	public static User createAdministratorUser() {
 		return new User(Config.ADMINISTRATOR_USER_NAME, Config.ADMINISTRATOR_USER_PASSWORD);
 	}
